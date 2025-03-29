@@ -62,6 +62,67 @@
                         android:nextFocusRight="@+id/fab" />
 
                     <LinearLayout
+                        android:id="@+id/quick_action_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp"
+                        android:background="@color/color_dark_background"
+                        android:gravity="center">
+
+                        <Button
+                            android:id="@+id/btn_refresh_subscription"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/title_sub_update"
+                            android:textSize="12sp"
+                            android:drawableTop="@drawable/ic_action_update"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp"
+                            android:layout_marginEnd="4dp"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                        <Button
+                            android:id="@+id/btn_test_latency"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/connection_test"
+                            android:textSize="12sp"
+                            android:drawableTop="@drawable/ic_action_ping"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp"
+                            android:layout_marginEnd="4dp"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                        <Button
+                            android:id="@+id/btn_test_speed"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/speed_test"
+                            android:textSize="12sp"
+                            android:drawableTop="@drawable/ic_action_speed"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp"
+                            android:layout_marginEnd="4dp"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                        <Button
+                            android:id="@+id/btn_one_click_connect"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/connect"
+                            android:textSize="12sp"
+                            android:drawableTop="@drawable/ic_stat_name"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:id="@+id/layout_test"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/view_height_dp64"

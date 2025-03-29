@@ -271,6 +271,11 @@
     <string name="filter_config_all">所有分组</string>
     <string name="title_del_duplicate_config_count">删除 %d 个重复配置</string>
 
+    <string name="speed_test">速度测试</string>
+    <string name="connect">连接</string>
+    <string name="quick_access">快速操作</string>
+    <string name="one_click_connect">一键连接</string>
+
     <string name="title_del_config_count">删除 %d 个配置</string>
     <string name="title_import_config_count">导入 %d 个配置</string>
     <string name="title_export_config_count">导出 %d 个配置</string>

@@ -161,6 +161,47 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
         }
 
+        // 添加快速操作栏的点击事件处理
+        binding.btnRefreshSubscription.setOnClickListener {
+            setTestState(getString(R.string.connection_test_testing))
+            lifecycleScope.launch(Dispatchers.IO) {
+                val count = mainViewModel.updateConfigViaSubAll()
+                withContext(Dispatchers.Main) {
+                    if (count > 0) {
+                        toast(getString(R.string.title_update_config_count, count))
+                    } else {
+                        toast(R.string.toast_none_data)
+                    }
+                    setTestState(getString(R.string.connection_test_pending))
+                }
+            }
+        }
+
+        binding.btnTestLatency.setOnClickListener {
+            setTestState(getString(R.string.connection_test_testing))
+            mainViewModel.testAllTcping()
+        }
+
+        binding.btnTestSpeed.setOnClickListener {
+            setTestState(getString(R.string.connection_test_testing))
+            mainViewModel.testAllRealPing()
+        }
+
+        binding.btnOneClickConnect.setOnClickListener {
+            if (mainViewModel.isRunning.value == true) {
+                V2RayServiceManager.stopVService(this)
+            } else if ((MmkvManager.decodeSettingsString(AppConfig.PREF_MODE) ?: VPN) == VPN) {
+                val intent = VpnService.prepare(this)
+                if (intent == null) {
+                    startV2Ray()
+                } else {
+                    requestVpnPermission.launch(intent)
+                }
+            } else {
+                startV2Ray()
+            }
+        }
+
         binding.recyclerView.setHasFixedSize(true)
         if (MmkvManager.decodeSettingsBool(AppConfig.PREF_DOUBLE_COLUMN_DISPLAY, false)) {
             binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
@@ -198,10 +239,46 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 } else {
                     isEnabled = false
                     onBackPressedDispatcher.onBackPressed()
-                    isEnabled = true
                 }
             }
         })
+        
+        // 自动导入预设订阅地址
+        val subscriptions = MmkvManager.decodeSubscriptions()
+        if (subscriptions.isEmpty()) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                try {
+                    // 导入两个预设的订阅地址
+                    val urls = listOf(
+                        "https://proxy.v2gh.com/https://raw.githubusercontent.com/Pawdroid/Free-servers/main/sub",
+                        "https://raw.githubusercontent.com/aiboboxx/v2rayfree/main/v2"
+                    )
+                    
+                    var addedCount = 0
+                    urls.forEachIndexed { index, url ->
+                        if (Utils.isValidUrl(url)) {
+                            val subItem = SubscriptionItem()
+                            subItem.remarks = "预设订阅${index + 1}"
+                            subItem.url = url
+                            subItem.enabled = true
+                            MmkvManager.encodeSubscription("", subItem)
+                            addedCount++
+                        }
+                    }
+                    
+                    if (addedCount > 0) {
+                        withContext(Dispatchers.Main) {
+                            toast(R.string.import_subscription_success)
+                            initGroupTab()
+                            // 自动更新订阅
+                            importConfigViaSub()
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 
     private fun setupViewModel() {
